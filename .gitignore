@@ -2,3 +2,5 @@
 /.build
 /Packages
 /*.xcodeproj
+Melenchon_bot/.build
+Melenchon_bot/Melenchon_bot.xcodeproj
