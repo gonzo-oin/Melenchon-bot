@@ -18,12 +18,9 @@ import HTTP
 /// if no command is given, it will default to "serve"
 
 // Declaring vars
-let Client_id =
-let Client_secret =
-let Refresh_token =
-let API_Key =
+
 let tfmt = "srt"
-var Access_token =
+
 
 // Instantiate a Drop
 let config = try Config()
@@ -131,7 +128,8 @@ func getVideoIds(search: String) -> [String]? {
 // Call methods
 if let newToken = refreshToken() {
     Access_token = newToken
-    
+    let searchedText = "écologie"
+    var bestCaptions = [Caption]()
     if let videoIdArray = getVideoIds(search: "Mélenchon"){
         
         videoIdArray.forEach({ (my_videoId) in
@@ -145,13 +143,20 @@ if let newToken = refreshToken() {
                         
                         if let caption = Caption(id: captionId, subtitleRaw: captionString, videoId: my_videoId){
                             
-                            print (caption.countOfWord("est"))
+                            bestCaptions.append(caption)
+                            
+                            print (caption.countOfWord(searchedText))
                         }
                     }
                 }
             }
         })
     }
+
+bestCaptions = bestCaptions.sorted(by: { (caption1, caption2) -> Bool in
+    caption1.countOfWord(searchedText) > caption2.countOfWord(searchedText)
+})
+
 }
 
 
