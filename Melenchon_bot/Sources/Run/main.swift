@@ -128,9 +128,9 @@ func getVideoIds(search: String) -> [String]? {
 // Call methods
 if let newToken = refreshToken() {
     Access_token = newToken
-    let searchedText = "écologie"
+    let searchedText = "climatique"
     var bestCaptions = [Caption]()
-    if let videoIdArray = getVideoIds(search: "Mélenchon"){
+    if let videoIdArray = getVideoIds(search: searchedText){
         
         videoIdArray.forEach({ (my_videoId) in
             
@@ -155,8 +155,10 @@ if let newToken = refreshToken() {
 
 bestCaptions = bestCaptions.sorted(by: { (caption1, caption2) -> Bool in
     caption1.countOfWord(searchedText) > caption2.countOfWord(searchedText)
+
 })
 
+    print(bestCaptions.first?.videoId ?? "")
 }
 
 

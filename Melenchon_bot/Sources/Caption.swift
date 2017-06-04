@@ -81,6 +81,13 @@ class Caption {
         
     }
     
+    public func subtitlesWithWord (word: String) -> [Subtitle] {
+    
+        return subtitles.filter { (subtitle) -> Bool in
+            subtitle.text.lowercased().contains(word.lowercased())
+        }
+    }
+    
 }
 
 class Subtitle {
