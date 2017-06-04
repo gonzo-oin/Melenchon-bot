@@ -13,7 +13,11 @@ class Caption {
     let id: String
     let subtitles : [Subtitle]
     let videoId: String
-    
+	var videoUrl: String { get {
+		return "https://www.youtube.com/watch?v=" + videoId
+		}
+	}
+	
     init?(id: String, subtitleRaw: String, videoId: String) {
         
         subtitles = Caption.extractSubtitles(subtitleRaw)
@@ -85,19 +89,35 @@ class Caption {
     
         return subtitles.filter { (subtitle) -> Bool in
             subtitle.text.lowercased().contains(word.lowercased())
-        }
+        }.sorted(by: { (subtitle1, subtitle2) -> Bool in
+			(subtitle1.text.components(separatedBy: word).count - 1) > (subtitle2.text.components(separatedBy: word).count - 1)
+		})
     }
     
 }
 
 class Subtitle {
-    
-    
+	
     let id: String
     let startDate: String
     let endDate: String
     let text: String
-    
+	var youtubeStartTime: String { get {
+			return startDate.substring(fromPosition: 3, toPosition: 4)! + "m" + startDate.substring(fromPosition: 6, toPosition: 7)!  + "s"
+		}
+	}
+	var hour: String { get {
+		return startDate.substring(fromPosition: 0, toPosition: 1)!
+		}
+	}
+	var minute: String { get {
+		return startDate.substring(fromPosition: 3, toPosition: 4)!
+		}
+	}
+	var second: String { get {
+		return startDate.substring(fromPosition: 6, toPosition: 7)!
+		}
+	}
     init (id: String, startDate:String, endDate:String, text: String) {
         
         self.id = id
