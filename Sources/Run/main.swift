@@ -143,17 +143,21 @@ func getGfyCatToken() -> String? {
 
 func createGifyMeme(gfyToken: String, startSecond: String, startMinute: String, startHour: String, captionText: String, videoURL: String) -> String? {
 	do {
+		let startSeconds = Int(startSecond)! + Int(startMinute)! * 60 + Int(startHour)! * 3600
+
 		let myJSON = try JSON(node: [
-			"fetchMinutes": startMinute,
 			"private": true,
 			"captions": [
 				[
-					"text": captionText
+					"text": captionText.folding(options: .diacriticInsensitive, locale: .current),
+					"fontHeight" : 35,
 				]
 			],
-			"fetchSeconds": startSecond,
+			"cut" : [
+				"duration" : 5,
+				"start" : startSeconds
+			],
 			"fetchUrl": videoURL,
-			"fetchHour": startHour
 			])
 
 		let response = try drop.client.post("https://api.gfycat.com/v1/gfycats",
@@ -194,9 +198,11 @@ func tryUntilIsComplete(gfyToken: String, gfycatId: String) {
 	queue.asyncAfter(deadline: .now() + 10) {
 		if let status = getStatus(gfyToken: gfyToken, gfycatId: gfycatId) {
 			if status == "complete" {
-				print("\n\n\n🎁🎁🎁 video is ready http://gfycat.com/\(gfycatId) 🎁🎁🎁\n\n\n")
+				print("\n\n\n🎁🎁🎁\nhttp://gfycat.com/\(gfycatId)\n🎁🎁🎁\n\n\n")
+				print("\n\n\n🎁🎁🎁\nhttps://thumbs.gfycat.com/\(gfycatId)-size_restricted.gif\n🎁🎁🎁\n\n\n")
+				
 			} else if status == "encoding" {
-				print("\n\n😒 video is encoding\n\n")
+				print("\n😒 video is encoding\n")
 				tryUntilIsComplete(gfyToken: gfyToken, gfycatId: gfycatId)
 			} else {
 				print("\n\n💥 There is no video !\n\n")
@@ -247,7 +253,8 @@ if let newToken = refreshToken() {
 	}
 	
 	// Create MEME for first Captions 
-	let bestCaption = bestCaptions.first!
+	let randomIndex = Int(arc4random_uniform(UInt32(bestCaptions.count)))
+	let bestCaption = bestCaptions.[randomIndex]
 	let bestSubtile = bestCaption.subtitlesWithWord(word: searchedText).first!
 	if let gfyToken = getGfyCatToken() {
 		if let memeName = createGifyMeme(gfyToken: gfyToken, startSecond: bestSubtile.second, startMinute: bestSubtile.minute, startHour: bestSubtile.hour, captionText: bestSubtile.text, videoURL: bestCaption.videoUrl) {
