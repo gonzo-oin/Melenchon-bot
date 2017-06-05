@@ -150,7 +150,7 @@ func createGifyMeme(gfyToken: String, startSecond: String, startMinute: String, 
 			"captions": [
 				[
 					"text": captionText.folding(options: .diacriticInsensitive, locale: .current),
-					"fontHeight" : 25,
+					"fontHeight" : 30,
 				]
 			],
 			"cut" : [
