@@ -254,7 +254,7 @@ if let newToken = refreshToken() {
 	
 	// Create MEME for first Captions 
 	let randomIndex = Int(arc4random_uniform(UInt32(bestCaptions.count)))
-	let bestCaption = bestCaptions.[randomIndex]
+	let bestCaption = bestCaptions[randomIndex]
 	let bestSubtile = bestCaption.subtitlesWithWord(word: searchedText).first!
 	if let gfyToken = getGfyCatToken() {
 		if let memeName = createGifyMeme(gfyToken: gfyToken, startSecond: bestSubtile.second, startMinute: bestSubtile.minute, startHour: bestSubtile.hour, captionText: bestSubtile.text, videoURL: bestCaption.videoUrl) {
